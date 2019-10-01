@@ -70,8 +70,6 @@ int main(int argc, char *argv[]) {
 	FILE *file;
 	file = fopen(fileName, "r");
 	
-	int test = 0;
-	
 	//takes data from the file and stores it
 	fscanf(file, "%d", &length);
 	fgets(numbers, 100, file);
