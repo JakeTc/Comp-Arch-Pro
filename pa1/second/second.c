@@ -112,7 +112,30 @@ void deleteLL(Node *head) {
 	}
 }
 
+void countLL() {
+	
+}
+
 void printLL(Node *head) {
+	Node *ptr = head;
+	int dupe = ptr->data;
+	
+	//prints head first
+	printf("%d\t", ptr->data);
+	ptr = ptr->next;
+	
+	while(*ptr != NULL) {
+		if(ptr->data != dupe) {
+			printf("%d\t", ptr->data);
+			dupe = ptr->data;
+		}
+		ptr = ptr->next;
+	}
+	
+}
+
+//for testing
+void pLL(Node *head) {
 	Node *ptr = head;
 	
 	while(ptr != NULL) {
@@ -120,9 +143,13 @@ void printLL(Node *head) {
 		ptr = ptr->next;
 	}
 	printf("\n");
+	
+	
+	
 }
 
 int main(int argc, char* argv[]) {
+	/*
 	//test linkedlist
 	Node *head = mkNode(1);
 	head->next = mkNode(3);
@@ -133,25 +160,53 @@ int main(int argc, char* argv[]) {
 	ptr->next = mkNode(4);
 	ptr = ptr->next;
 	ptr->next = mkNode(7);
+
 	ptr = ptr->next;
 	ptr->next = mkNode(10);
 	ptr = ptr->next;
 	
 	Node **h = &head;
 	
-	printLL(head);
+	pLL(head);
 	//deleteTarget(h, 4);
 	insertNodeASort(h, 7);
-	printLL(head);
+	p(head);
+	*/
 	
-	//File stuff
-	
+	//checks for arguments
 	if(argc == 1) {
 		printf("insufficient amount of arguments!\n");
 		return 0;
 	}
 	
+	//opens file
 	FILE *file = fopen(argv[1], "r");
+	
+	if(file == NULL) {
+		printf("File could not be opened!\n");
+		return 0;
+	}
+	
+	//variables for linked list
+	Node *head = NULL;
+	Node **h = &head;
+
+	//variables for file reading
+	char line[100];
+	char * action = NULL;
+	int data = 0;
+	char* token = NULL;
+	
+	while(fscanf(file, "%s\t%d", action, data) != EOF) {
+		if(action[0] == 'i') {
+			insertNodeASort(h, data);
+		} else if(action[0] == 'd') {
+			deleteTarget(h, data);
+		} else {
+			
+		}
+		
+	}
 	
 	
 	
