@@ -206,7 +206,6 @@ int main(int argc, char* argv[]) {
 	
 	
 	while(fscanf(file, "%s\t%d", action, &data) != EOF) {
-		printf("this works\n");
 		if(action[0] == 'i') {
 			insertNodeASort(h, data);
 		} else if(action[0] == 'd') {
