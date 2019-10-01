@@ -124,11 +124,14 @@ void countLL(Node *head) {
 
 void printLL(Node *head) {
 	Node *ptr = head;
-	int dupe = ptr->data;
+	int dupe;
 	
 	//prints head first
-	printf("%d\t", ptr->data);
-	ptr = ptr->next;
+	if(ptr != NULL) {
+		dupe = ptr->data;
+		printf("%d\t", ptr->data);
+		ptr = ptr->next;
+	}
 	
 	while(ptr != NULL) {
 		if(ptr->data != dupe) {
@@ -203,9 +206,8 @@ int main(int argc, char* argv[]) {
 	char action[100];
 	int data = 0;
 	
-	
-	
 	while(fscanf(file, "%s\t%d", action, &data) != EOF) {
+		
 		if(action[0] == 'i') {
 			insertNodeASort(h, data);
 		} else if(action[0] == 'd') {
@@ -215,9 +217,9 @@ int main(int argc, char* argv[]) {
 		}	
 
 	}
+	
 	countLL(head);
 	printLL(head);
-
 	deleteLL(head);
 	
 	fclose(file);

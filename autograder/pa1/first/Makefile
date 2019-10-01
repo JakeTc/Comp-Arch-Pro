@@ -1,4 +1,4 @@
-OUTPUT=fourth
+OUTPUT=first
 CFLAGS=-g -Wall -Werror -fsanitize=address -std=c99
 LFLAGS=-lm
 
