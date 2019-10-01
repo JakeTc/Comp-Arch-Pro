@@ -45,7 +45,7 @@ int* sortAscending(int array[], int size) {
 void printArr(int* array, int length) {
 	int k = 0;
 	for(k = 0; k < length; k++) {
-		printf("%d", array[k]);
+		printf("%d\t", array[k]);
 	}
 	printf("\n");
 	
