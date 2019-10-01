@@ -40,6 +40,7 @@ int deleteTarget(Node **head, int target) {
 	if(ptr->data == target) {
 		free(ptr);
 		ptr = next;
+		next = next->next;
 		*head = ptr;
 	} else {
 		//searches linked list for target
@@ -193,8 +194,6 @@ int main(int argc, char* argv[]) {
 		return 0;
 	}
 	
-	
-		
 	//variables for linked list
 	Node *head = NULL;
 	Node **h = &head;
@@ -202,11 +201,7 @@ int main(int argc, char* argv[]) {
 	//variables for file reading
 	char action[100];
 	int data = 0;
-	
-	
-	
 	while(fscanf(file, "%s\t%d", action, &data) != EOF) {
-		printf("this works\n");
 		if(action[0] == 'i') {
 			insertNodeASort(h, data);
 		} else if(action[0] == 'd') {
@@ -220,7 +215,7 @@ int main(int argc, char* argv[]) {
 	printLL(head);
 
 	deleteLL(head);
-	
+		
 	fclose(file);
 	return 0;
 }
