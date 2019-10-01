@@ -1,11 +1,13 @@
-
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 typedef struct _Node {
-	int *data;
+	int data;
 	struct _Node *next;
 } Node;
 
-Node *mkNode(int *data) {
+Node *mkNode(int data) {
 	Node *nwNode = malloc(sizeof(Node));
 	nwNode->data = data;
 	nwNode->next = NULL;
@@ -13,7 +15,7 @@ Node *mkNode(int *data) {
 	return nwNode;
 }
 
-Node *push(int *data, Node* head) {
+Node *push(int data, Node* head) {
 	Node *nwNode = malloc(sizeof(Node));
 	nwNode->data = data;
 	nwNode->next = head;
@@ -23,28 +25,29 @@ Node *push(int *data, Node* head) {
 
 //deletes the first occurrence of target (INTEGER VERSION)
 //returns 0 if it finds the target, 1 if it doesnt
-int deleteTarget(Node *head, int target) {
-	Node *ptr = head;
+int deleteTarget(Node **head, int target) {
+	Node *ptr = *head;
 	
 	//checks if the head is null
 	if(ptr == NULL) {
 		return 1;
 	}
 	
-	Node *next = head->next;
+	Node *next = (*head)->next;
 	Node *temp = NULL;
 	
 	//edge case if the head of the linked list is the target
-	if(*(int)(ptr->data) == target) {
+	if(ptr->data == target) {
 		free(ptr);
 		ptr = next;
 		next = next->next;
+		*head = ptr;
 	} else {
 		//searches linked list for target
 		//if found, takes node out of the list and frees it.
 		//reconnects the linklist afterward
-		while(*next != NULL) {
-			if(*(int*)(next->data) == target) {
+		while(next != NULL) {
+			if(next->data == target) {
 				temp = next;
 				ptr->next = next->next;
 				next = ptr->next;
@@ -61,6 +64,42 @@ int deleteTarget(Node *head, int target) {
 	return 0;
 }
 
+//inserts a node in ascending order based on the data
+int insertNodeASort(Node **head, int nwData) {
+	Node *ptr = *head;
+	//edge case for if the list is empty
+	if(*head == NULL) {
+		*head = mkNode(nwData);
+		return 0;
+	
+	//edge case for if the data belongs before the head
+	} else if((*head)->data > nwData) {
+		Node *temp = *head;
+		*head = mkNode(nwData);
+		(*head)->next = temp;
+		return 0;
+	}
+	
+	//iterates ptr and next
+	Node *next = ptr->next;
+	
+	//iterates pointers until it finds the correct spot
+	while(next != NULL && (next->data) <= nwData) {
+		ptr = ptr->next;
+		next = ptr->next;
+	}
+	
+	if(next == NULL) {
+		ptr->next = mkNode(nwData);
+		return 0;
+	} else {
+		ptr->next = mkNode(nwData);
+		ptr->next->next = next;
+		return 0;
+	}
+	
+}
+
 //deletes the entirety of a linked list!
 void deleteLL(Node *head) {
 	Node *current = head;
@@ -68,14 +107,23 @@ void deleteLL(Node *head) {
 	
 	while(current != NULL) {
 		next = current->next;
-		free(current->data);
 		free(current);
 		current = next;
 	}
 }
 
+void printLL(Node *head) {
+	Node *ptr = head;
+	
+	while(ptr != NULL) {
+		printf("%d\t", ptr->data);
+		ptr = ptr->next;
+	}
+	printf("\n");
+}
 
 int main(int argc, char* argv[]) {
+	//test linkedlist
 	Node *head = mkNode(1);
 	head->next = mkNode(3);
 	Node *ptr = head->next;
@@ -88,6 +136,24 @@ int main(int argc, char* argv[]) {
 	ptr = ptr->next;
 	ptr->next = mkNode(10);
 	ptr = ptr->next;
+	
+	Node **h = &head;
+	
+	printLL(head);
+	//deleteTarget(h, 4);
+	insertNodeASort(h, 7);
+	printLL(head);
+	
+	//File stuff
+	
+	if(argc == 1) {
+		printf("insufficient amount of arguments!\n");
+		return 0;
+	}
+	
+	FILE *file = fopen(argv[1], "r");
+	
+	
 	
 	return 0;
 }
