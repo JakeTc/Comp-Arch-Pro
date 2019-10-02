@@ -184,7 +184,7 @@ int main(int argc, char* argv[]) {
 	
 	//checks for arguments
 	if(argc == 1) {
-		printf("insufficient amount of arguments!\n");
+		printf("error\n");
 		return 0;
 	}
 	
@@ -192,7 +192,7 @@ int main(int argc, char* argv[]) {
 	FILE *file = fopen(argv[1], "r");
 	
 	if(file == NULL) {
-		printf("File could not be opened!\n");
+		printf("error\n");
 		return 0;
 	}
 	
