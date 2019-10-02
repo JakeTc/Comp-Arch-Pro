@@ -158,6 +158,9 @@ int main(int argc, char* argv[]) {
 	}
 	free(matrixProduct);
 	
+	//close the file
+	fclose(fp);
+	
 	return 0;
 }
 

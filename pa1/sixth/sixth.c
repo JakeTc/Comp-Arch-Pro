@@ -63,14 +63,14 @@ int main(int argc, char *argv[]) {
 	*/
 	
 	if(argc == 1) {
-		printf("Insufficient amount of arguments!\n");
+		printf("error\n");
 		return 0;
 	}
 	
 	FILE *fp = fopen(argv[1], "r");
 
 	if(fp == NULL) {
-		printf("File could not be read!\n");
+		printf("error\n");
 		return 0;
 	}
 	
@@ -85,6 +85,9 @@ int main(int argc, char *argv[]) {
 	printTree(head);
 	printf("\n");
 	//if file doesnt exist, just print error
+	
+	//closes file
+	fclose(fp);
 	
 	return 0;
 }

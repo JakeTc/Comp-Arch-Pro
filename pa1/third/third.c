@@ -26,6 +26,19 @@ void deleteLL(Node *head) {
 		free(current);
 		current = next;
 	}
+	return;
+}
+
+//inserts at the end of the list
+//ASSUMES HEAD IS NOT NULL
+void insertEnd(Node *head, int key) {
+	Node *ptr = head;
+	while(ptr->next != NULL) {
+		ptr = ptr->next;
+	}
+	
+	ptr->next = mkNode(key);
+	return;
 }
 
 //coutns the amount of nodes that are in the Linked List
@@ -62,6 +75,17 @@ int getKey(int data) {
 	return key;
 }
 
+//returns 1 if it finds a node at that key
+int searchHash(Node **hashtable, int data) {
+	int key = getKey(data);
+	
+	if(hashtable[key] != NULL) {
+		return 1;
+	}
+	
+	return 0;
+}
+
 //for inserting into the hastable
 int insertHash(Node *hashtable[], int data) {
 	
@@ -71,7 +95,8 @@ int insertHash(Node *hashtable[], int data) {
 		hashtable[key] = mkNode(key);
 		
 	} else {
-		
+		insertEnd(hashtable[key], key);
+		return 1;
 	}
 	
 	
@@ -82,12 +107,49 @@ int insertHash(Node *hashtable[], int data) {
 int main(int argc, char *argv[]) {
 	Node **hashtable = calloc(10000, sizeof(Node*));
 	int i = 0;
+	if(argc == 1) {
+		printf("error\n");
+		return 0;
+	}
 	
+	FILE *fp = fopen(argv[1], "r");
+
+	if(fp == NULL) {
+		printf("error\n");
+		return 0;
+	}
+	
+	//variables for file reading
+	char action[100];
+	int data = 0;
+	
+	//variables for storing the amount of collisions and successful searches
+	int collisions = 0;
+	int finds = 0;
+
+	while(fscanf(fp, "%s\t%d", action, &data) != EOF) {
+		if(action[0] == 'i') {
+			collisions += insertHash(hashtable, data);
+		} else if(action[0] == 's') {
+			finds += searchHash(hashtable, data);
+		}
+	}
+	
+	printf("%d\n", collisions);
+	printf("%d\n", finds);
 	
 	//free used elements of hashtable
+	for(i = 0; i < 10000; i++) {
+		if(hashtable[i] != NULL) {
+			deleteLL(hashtable[i]);
+		}
+	}
+	
 	
 	//free the hashtable
 	free(hashtable);
+	
+	fclose(fp);
 	
 	return 0;
 }
