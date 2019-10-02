@@ -51,6 +51,7 @@ int searchLL(Node *head, int data) {
 		if(ptr->data == data) {
 			return 1;
 		}
+		ptr = ptr->next;
 	}
 	
 	//returns 0 if unsuccessful

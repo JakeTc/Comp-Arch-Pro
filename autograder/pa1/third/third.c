@@ -31,14 +31,31 @@ void deleteLL(Node *head) {
 
 //inserts at the end of the list
 //ASSUMES HEAD IS NOT NULL
-void insertEnd(Node *head, int key) {
+void insertEnd(Node *head, int data) {
 	Node *ptr = head;
 	while(ptr->next != NULL) {
 		ptr = ptr->next;
 	}
 	
-	ptr->next = mkNode(key);
+	ptr->next = mkNode(data);
 	return;
+}
+
+//searches through LL for data
+//returns 1 if successful
+int searchLL(Node *head, int data) {
+	Node *ptr = head;
+	
+	//searches through list for data
+	while(ptr != NULL) {
+		if(ptr->data == data) {
+			return 1;
+		}
+		ptr = ptr->next;
+	}
+	
+	//returns 0 if unsuccessful
+	return 0;
 }
 
 //coutns the amount of nodes that are in the Linked List
@@ -80,7 +97,7 @@ int searchHash(Node **hashtable, int data) {
 	int key = getKey(data);
 	
 	if(hashtable[key] != NULL) {
-		return 1;
+		return searchLL(hashtable[key], data);
 	}
 	
 	return 0;
@@ -92,10 +109,10 @@ int insertHash(Node *hashtable[], int data) {
 	//gets the key and sees if the key is in the array
 	int key = getKey(data);
 	if(hashtable[key] == NULL) {
-		hashtable[key] = mkNode(key);
+		hashtable[key] = mkNode(data);
 		
 	} else {
-		insertEnd(hashtable[key], key);
+		insertEnd(hashtable[key], data);
 		return 1;
 	}
 	
