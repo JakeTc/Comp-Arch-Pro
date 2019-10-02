@@ -48,7 +48,7 @@ int searchLL(Node *head, int data) {
 	
 	//searches through list for data
 	while(ptr != NULL) {
-		if(ptr->data = data) {
+		if(ptr->data == data) {
 			return 1;
 		}
 	}
@@ -96,7 +96,7 @@ int searchHash(Node **hashtable, int data) {
 	int key = getKey(data);
 	
 	if(hashtable[key] != NULL) {
-		return 1;
+		return searchLL(hashtable[key], data);
 	}
 	
 	return 0;
