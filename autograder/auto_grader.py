@@ -3,10 +3,10 @@
 import os, sys, glob, time, subprocess, signal
 import popen2
 
-subdirectories = ['first', 'second', 'third', 'fourth', 'fifth', 'sixth']
-formats = {'first':'file', 'second':'file', 'third':'file', 'fourth':'file', 'fifth':'line', 'sixth':'file'}# if a program has single liner input and output, we put all test cases in single file. Otherwise, we have a file for test and associated file with results
-weight = {'first':1.25, 'second':1.25, 'third':2.5, 'fourth':2.0, 'fifth':0.5, 'sixth':2.0}
-scores = {'first':0, 'second':0, 'third':0, 'fourth':0, 'fifth':0, 'sixth':0}
+subdirectories = ['first', 'second', 'third']
+formats = {'first':'file', 'second':'line', 'third':'line'}# if a program has single liner input and output, we put all test cases in single file. Otherwise, we have a file for test and associated file with results
+weight = {'first':3.5, 'second':1.75, 'third':1.5}
+scores = {'first':0, 'second':0, 'third':0}
 
 test_cases_directory = ""
 
@@ -115,7 +115,7 @@ def make_executable(dirname):
     else:
         print "No Makefile found in", dirname
         print "Please submit a Makefile to receive full grade."
-        run_command("gcc -g -Wall -Werror -fsanitize=address -o %s *.c *.h"%(dirname), verbose=False)
+        run_command("gcc -Wall -Werror -fsanitize=address -o %s *.c *.h"%(dirname), verbose=False)
 
 
 def file_grade(dirname):
@@ -126,9 +126,9 @@ def file_grade(dirname):
 
     try:
         make_executable(dirname)
-    except Exception as e:
-        print "An exception occured trying to build %s"%(dirname)
-        print(e)
+    except e:
+        print "An exception occured trying to execute %s"%(dirname)
+        print e
 	os.chdir(prevdir)
 	print "Score is ", score
 	print ""
@@ -161,11 +161,11 @@ def file_grade(dirname):
 	    #ret = "blah"
             #run_command("cp " + test_dir + testfile + "  .", user_program=False);
             #run_command("cp " + resultfile + " .", user_program=False);
-
-            ret = run_command('./%s "%s"'%(dirname, test_dir + testfile), user_program=True, verbose=False);
+	    
+            ret = run_command("./%s \"%s\""%(dirname, test_dir + testfile), user_program=True, verbose=False);
         except Exception as e:
             print "An exception occurred while executing %s %s"%(dirname, testfile)
-            print(e)
+            print e
             os.chdir(prevdir)
             scores[dirname] = score
             print "Score is ", score
@@ -198,7 +198,7 @@ def single_grade(dirname):
     try:
         make_executable(dirname)
     except:
-        print "An exception occured trying to build %s"%(dirname)
+        print "An exception occured trying to execute %s"%(dirname)
 	os.chdir(prevdir)
 	print "Score is ", score
 	print ""
@@ -239,7 +239,7 @@ def single_grade(dirname):
             state = 0
 
             try:
-	        command_str = './%s "%s"'%(dirname, inputline.strip())
+	        command_str = "./%s %s"%(dirname, inputline.strip())
 #		command_str = "pwd"
 
 #                print "command_str is %s"%(command_str)
@@ -250,9 +250,7 @@ def single_grade(dirname):
                 if compare_string(outputline, ret):
 #                    print "The output is correct for input %s."%(inputline.strip())
     		    score = score + weight[dirname]
-#            except:
-            except Exception as e:
-                print(e)
+            except:
         	os.chdir(prevdir)
                 print "An exception occured trying to execute %s"%(command_str)
         	print "Score is ", score
@@ -280,7 +278,7 @@ def global_grade(dirname):
         
             
 if __name__ == '__main__':
-    basepath = "pa1"
+    basepath = "pa2"
     tarmode = False #by default check the directory
     
     test_cases_directory = os.getcwd() + "/testcases/"
@@ -290,31 +288,31 @@ if __name__ == '__main__':
 
     if tarmode==False:
         if not os.path.isdir(basepath):
-            print "pa1 is not present in this directory."
+            print "pa2 is not present in this directory."
             sys.exit(1)
         else:
-            print "Grading the content of pa1."
+            print "Grading the content of pa2."
             os.chdir(basepath)
             global_grade(basepath)
 
     else:
         prevdir = os.getcwd()
 	print "dir is ", prevdir
-        if not os.path.exists("pa1.tar"):
-            print "Expecting pa1.tar in current directory. Current directory is %s"%(prevdir)
-            print "Please make sure you created pa1.tar in the right directory"
+        if not os.path.exists("pa2.tar"):
+            print "Expecting pa2.tar in current directory. Current directory is %s"%(prevdir)
+            print "Please make sure you created pa2.tar in the right directory"
             sys.exit(1)
         if os.path.exists("obj_temp"):
             print "Deleting the directory obj_temp."
             run_command("rm -rf obj_temp", verbose=False)
         run_command("mkdir obj_temp", verbose=False)
         os.chdir("obj_temp")
-        run_command("tar -xvf ../pa1.tar")
-        if os.path.isdir("pa1"):
-            os.chdir("pa1")
-            global_grade("pa1")
+        run_command("tar -xvf ../pa2.tar")
+        if os.path.isdir("pa2"):
+            os.chdir("pa2")
+            global_grade("pa2")
         else:
-            print "There is not directory named pa1 in pa1.tar."
+            print "There is not directory named pa2 in pa2.tar."
             print "Please check your tar file."
         os.chdir(prevdir)
     Total_score = 0.0

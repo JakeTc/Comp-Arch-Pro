@@ -1,2 +1,11 @@
-7
--100	-302	-591	-1	5	0	-101
+1
+set	1	1
+set	1	0
+comp	1	0
+comp	1	0
+get	1	0
+get	0	0
+get	1	0
+set	1	1
+set	2	0
+set	3	1
