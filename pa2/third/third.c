@@ -1,6 +1,5 @@
-#include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
+#include <stdio.h>
 
 //will go to that index and set that bit to be 1 or 0
 unsigned short set(unsigned short *x, unsigned short arg1, unsigned short arg2) {
@@ -51,7 +50,7 @@ unsigned short get(unsigned short *x, unsigned short arg1) {
 unsigned short comp(unsigned short *x, unsigned short arg1) {
 	unsigned short tempx = *x;
 	unsigned mask = 1;
-	
+		
 	//takes mask and sets it to the appropriate index
 	int i = 0;
 	for(i = 0; i < arg1; i++) {
@@ -74,84 +73,9 @@ unsigned short comp(unsigned short *x, unsigned short arg1) {
 	return tempx;
 }
 
-int main(int argc, char *argv[]) {
+
+int main(int argc, char*argv[]) {
 	
-	//variables for x
-	unsigned short _x = 0;
-	unsigned short *x = &_x;
-	
-	//testing area
-	/*
-	*x = 5;
-	
-	printf("%d\n", get(x, 0)); 
-	printf("%d\n", comp(x, 0)); 
-	printf("%d\n", set(x, 1, 1));
-	
-	return 0;
-	*/
-	
-	FILE *fp;
-	
-	if(argc == 1) {
-		printf("No argument was given!\n");
-		return 0;
-	}
-	
-	fp = fopen(argv[1], "r");
-	
-	if(fp == NULL) {
-		printf("Unable to open file!\n");
-		return 0;
-	}
-	//scans x and stores it
-	fscanf(fp, "%hu", x);
-	
-	char fx[256];
-	int arg1 = 0;
-	int arg2 = 0;
-	
-	
-	//functions are: get, comp, set
-	while(fscanf(fp, "%s\t%d\t%d\t", fx, &arg1, &arg2) != EOF) {
-		
-		if(strcmp(fx, "get") == 0) {
-			printf("%d\n", get(x, arg1));
-			
-		} else if(strcmp(fx, "comp") == 0) {
-			printf("%d\n", comp(x, arg1));
-			
-		} else if(strcmp(fx, "set") == 0) {
-			printf("%d\n", set(x, arg1, arg2));
-			
-		} else {
-			printf("Invalid command\n");
-		}
-		
-	}
-	
+
 	return 0;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
