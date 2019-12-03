@@ -1,6 +1,6 @@
 #include <stdlib.h>
 #include <stdio.h>
-//#include <string.h>
+#include <string.h>
 
 char* operators[] = {"NOT", "AND", "NAND", "OR", "NOR", "XOR"};
 
@@ -101,38 +101,33 @@ int main(int argc, char* argv[]) {
 		fscanf(fp, "%s", outputs[i]);
 	}
 	
+	fgets(buffer, 400, fp); //moves to the next line, since fp is still pointing at the previous line
 	
+	//makes a save point so that we can seek back to this later
+	unsigned long savePoint;
+	fflush(fp);
+	savePoint = ftell(fp);
 	
 	//find the line length of the file
-	FILE* savePoint = fp;
 	int commandAmt = 0;
-	
-	
-	
-	fgets(buffer, 400, fp); //moves to the next line, since fp is still pointing at the previous line
 	while(fgets(buffer, 400, fp) != NULL) {
 		printf("%d @ %s", commandAmt, buffer);
 		commandAmt++;
 	}
-	commandAmt--;//for whatever reason, code above adds one extra to this var
 	
-	
-	//reset fp to the save point
-	fp = savePoint;
-	//printf("%d: %s", commandAmt, fgets(buffer, 400, fp));
-	
-	return 0;
+	//goes back to savePoint
+	fseek(fp, savePoint, SEEK_SET);
 	
 	//Makes a string array of the commands
-	char* commands[commandAmt][3];
+	char* commands[commandAmt];
 	for(i = 0; i < commandAmt; i++) {
-		
+		commands[i] = fgets(buffer, 400, fp);
+		//checks if fgets does not reach EOF
+		if(commands[i] == NULL) {
+			printf("Error: End of file unexpectedly reached.\n");
+			return 0;
+		}
 	}
 	
-	while(fgets(buffer, 400, fp) != NULL) {
-		
-	}
-	
- 	
 	return 0;
 }
