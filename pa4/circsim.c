@@ -1,7 +1,9 @@
 #include <stdlib.h>
 #include <stdio.h>
+//#include <string.h>
 
-char operators[] = {"NOT", "AND", "NAND", "OR", "NOR", "XOR"};
+char* operators[] = {"NOT", "AND", "NAND", "OR", "NOR", "XOR"};
+
 
 int variableScan(FILE* fp, int amt, char** list) {
 	int i = 0;
@@ -9,6 +11,19 @@ int variableScan(FILE* fp, int amt, char** list) {
 		fscanf(fp, "%s", list[i]);
 	}
 
+}
+
+//searches a string array and returns the index of the string
+//if not found, returns -1.
+
+int searchStrArr(char* str, char** arr, int length) {
+	int i = 0;
+	for(i = 0; i < length; i++) {
+		if(strcmp(str, arr[i])) {
+			return i;
+		}
+	}
+	return -1;
 }
 
 int gate(char* line) {
@@ -73,7 +88,6 @@ int main(int argc, char* argv[]) {
 	
 	char inputs[amt][100];
 	
-	int i = 0;
 	for(i = 0; i < amt; i++) {
 		fscanf(fp, "%s", inputs[i]);
 	}
@@ -87,11 +101,38 @@ int main(int argc, char* argv[]) {
 		fscanf(fp, "%s", outputs[i]);
 	}
 	
+	
+	
+	//find the line length of the file
+	FILE* savePoint = fp;
+	int commandAmt = 0;
+	
+	
+	
+	fgets(buffer, 400, fp); //moves to the next line, since fp is still pointing at the previous line
+	while(fgets(buffer, 400, fp) != NULL) {
+		printf("%d @ %s", commandAmt, buffer);
+		commandAmt++;
+	}
+	commandAmt--;//for whatever reason, code above adds one extra to this var
+	
+	
+	//reset fp to the save point
+	fp = savePoint;
+	//printf("%d: %s", commandAmt, fgets(buffer, 400, fp));
+	
+	return 0;
+	
 	//Makes a string array of the commands
-	while(___ != EOF) {
+	char* commands[commandAmt][3];
+	for(i = 0; i < commandAmt; i++) {
 		
 	}
 	
+	while(fgets(buffer, 400, fp) != NULL) {
+		
+	}
 	
+ 	
 	return 0;
 }
