@@ -287,7 +287,7 @@ int main(int argc, char* argv[]) {
 			printf("%hu ", outputNums[j]);
 		}
 		
-		printf("\b\n");
+		printf("\n");
 		
 		input++;
 	}
