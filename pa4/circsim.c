@@ -202,31 +202,95 @@ int main(int argc, char* argv[]) {
 	}
 
 	//creates a new array that combines the input array and the temp array
-	char** vars = (char**)malloc(sizeof(char*) * (inAmt + tVLength));
-	for(i - 0; i < inAmt; i++) {
+	int varsLength = inAmt + tVLength;
+	char** vars = (char**)malloc(sizeof(char*) * varsLength);
+
+	for(i = 0; i < inAmt; i++) {
 		vars[i] = inputs[i];
 	}
 	
-	for(i = inAmt; i < (inAmt + tVLength); i++) {
+	for(i = inAmt; i < varsLength; i++) {
 		vars[i] = tempVars[i - inAmt];
 	}
 	
-	/*
-	int a = 0;
-	int b = 0;
-	int testc = gates(2, a, b);
-	printf("%d\n", testc);
-	
-	return 0;
-	*/
-	//end of testing
-	
 	//will prepare to make the truth table
 	unsigned short input = 0;
-	int varsNum = inAmt + tV
-	unsigned short* inputNums = (unsigned short*)malloc(sizeof(unsigned short) * varsNum);
+	unsigned short* varsNums = (unsigned short*)malloc(sizeof(unsigned short) * varsLength);
 	unsigned short* outputNums = (unsigned short*)malloc(sizeof(unsigned short) * amt);
+	int gateNum = -1;
+	unsigned short a;
+	unsigned short b;
+	unsigned short c;
 	
+	for(i = 0; i < powr(2, inAmt); i++) {
+		//prints all of the inputs
+		for(j = 0; j < inAmt; j++) {
+			//set all of the inputs and prints them
+			unsigned short bit = get(&input, (unsigned short)(inAmt - 1 - j));
+			varsNums[j] = bit;
+			printf("%hu ", varsNums[j]);
+		}
+		
+		j = 0;
+		
+		//gets the inputs and the outputs as strings
+		char* astr;
+		char* bstr;
+		char* cstr;
+		
+		for(j = 0; j < commandAmt; j++) {
+			astr = (char*)cmds[j][1];
+			
+			//if directive is NOT
+			if(strcmp(cmds[j][0], "NOT") == 0) {
+				bstr = astr;
+				cstr = (char*)cmds[j][2];
+			
+			//otherwise, if it is not NOT
+			} else {
+				bstr = (char*)cmds[j][2];
+				cstr = (char*)cmds[j][3];
+			}
+			
+			//now will get the values of the inputs
+			//	
+			int index = searchStrArr(astr, vars, varsLength);
+			a = varsNums[index];
+			
+			index = searchStrArr(bstr, vars, varsLength);
+			b = varsNums[index];
+			
+			
+			
+			//Determines which gate to use and computes c
+			gateNum = searchStrArr(cmds[j][0], operators, 6);
+			c = gates(gateNum, a, b);
+			
+			//printf("%s(%d, %d) = %d\n", cmds[j][0], a, b, c);
+			
+			//sets the corresponding variable to the value of c
+			index = searchStrArr(cstr, vars, varsLength);
+			if(index == -1) {
+				index = searchStrArr(cstr, outputs, amt);
+				outputNums[index] = c;
+			} else {
+				varsNums[index] = c;
+			}
+			
+		}
+		
+		//prints out all of the outputs
+		for(j = 0; j < amt; j++) {
+			printf("%hu ", outputNums[j]);
+		}
+		
+		printf("\b\n");
+		
+		input++;
+	}
+	
+	
+	/*
 	//prints out every single line
 	for(i = 0; i < powr(2, inAmt); i++) {
 		int j = 0;
@@ -323,7 +387,7 @@ int main(int argc, char* argv[]) {
 		input++;
 		printf("\b\n-----------------------------------------------------------------------\n");
 	}
-	
+	*/
 	
 	return 0;
 }
