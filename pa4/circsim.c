@@ -4,13 +4,15 @@
 
 char* operators[] = {"NOT", "AND", "NAND", "OR", "NOR", "XOR"};
 
-
-int variableScan(FILE* fp, int amt, char** list) {
+//power funciton
+int powr(int a, int b) {
 	int i = 0;
-	for(i = 0; i < amt; i++) {
-		fscanf(fp, "%s", list[i]);
+	int result = 1;
+	for(i = 0; i < b; i++) {
+		result *= a;
 	}
-
+	
+	return result;
 }
 
 //searches a string array and returns the index of the string
@@ -26,38 +28,37 @@ int searchStrArr(char* str, char* arr[], int length) {
 	return -1;
 }
 
-int gate(char* line) {
-
+//will go to that index and return the bit that is there
+unsigned short get(unsigned short *x, unsigned short arg1) {
+	unsigned short tempx = *x;
+	unsigned short mask = 1;
+	
+	//shifts the number so that the bit we are looking for is at the last place
+	tempx = tempx >> arg1;
+	
+	//returns whether or not the bit is a 1 or a 0
+	return tempx & mask;
 }
 
-//NOT
-int not(int a) {
-	return !a;
-}
-
-//AND
-int and(int a, int b) {
-	return a & b;
-}
-
-//NAND
-int nand(int a, int b) {
-	return !(a & b);
-}
-
-//OR
-int or(int a, int b) {
-	return a | b;
-}
-
-//NOR
-int nor(int a, int b) {
-	return !(a | b);
-}
-
-//XOR
-int xor(int a, int b) {
-	return a ^ b;
+int gates(int gate, int a, int b) {
+	//unsigned short a = (unsigned short)ai;
+	//unsigned short b = (unsigned short)bi;
+	switch(gate) {
+		case 0:
+			return ~a + 2;
+		case 1:
+			return a & b;
+		case 2:
+			return ~(a & b) + 2;
+		case 3:
+			return (a | b);
+		case 4:
+			return ~(a | b) + 2;
+		case 5:
+			return (a ^ b);
+	}
+	
+	return -1;
 }
 
 int main(int argc, char* argv[]) {
@@ -79,9 +80,11 @@ int main(int argc, char* argv[]) {
 	char buffer[512];
 	int i = 0;
 	int amt = 0;
+	int inAmt = 0;
 		
 	//ignores directive, and stores the amount of inputs
 	fscanf(fp, "%s %d", buffer, &amt);
+	inAmt = amt;
 	
 	//take all of the input variable names and stores them in an array
 	
@@ -140,11 +143,18 @@ int main(int argc, char* argv[]) {
 	//Now finds the amount of arguments that each command takes
 	char cmds[commandAmt][4][128];
 	int argArr[commandAmt];
-	char tempVars[commandAmt][16];
 	int tVLength = 0;
 	char* token;
 	char* delims = " \n";
 	int j = 0;
+	
+	
+	char* tempVars[commandAmt];
+	//initializing tempVars
+	for(i = 0; i < commandAmt; i++) {
+		tempVars[i] = (char*)malloc(16);
+	}
+	
 	
 	//figures out the amount of arguments that each directive has and finds all of the temp values
 	for(i = 0; i < commandAmt; i++) {
@@ -190,9 +200,130 @@ int main(int argc, char* argv[]) {
 		
 		printf("\n");
 	}
+
+	//creates a new array that combines the input array and the temp array
+	char** vars = (char**)malloc(sizeof(char*) * (inAmt + tVLength));
+	for(i - 0; i < inAmt; i++) {
+		vars[i] = inputs[i];
+	}
 	
+	for(i = inAmt; i < (inAmt + tVLength); i++) {
+		vars[i] = tempVars[i - inAmt];
+	}
 	
-	//HAVE YET TO TEST OUT THE NEW CMDS ARRAY, AND THE NEW TEMPS ARRAY!!!
+	/*
+	int a = 0;
+	int b = 0;
+	int testc = gates(2, a, b);
+	printf("%d\n", testc);
+	
+	return 0;
+	*/
+	//end of testing
+	
+	//will prepare to make the truth table
+	unsigned short input = 0;
+	int varsNum = inAmt + tV
+	unsigned short* inputNums = (unsigned short*)malloc(sizeof(unsigned short) * varsNum);
+	unsigned short* outputNums = (unsigned short*)malloc(sizeof(unsigned short) * amt);
+	
+	//prints out every single line
+	for(i = 0; i < powr(2, inAmt); i++) {
+		int j = 0;
+		
+		//prints all of the inputs
+		for(j = inAmt - 1; j >= 0; j--) {
+			//set all of the inputs and prints them
+			unsigned short bit = get(&input, (unsigned short)j);
+			inputNums[inAmt - j] = bit;
+			printf("%hu ", inputNums[inAmt - j]);
+		}
+		
+		printf("\n");	
+		
+		
+		//finds the result
+		//search for index of inputs/temps, get those nums, and store the result in the correct
+		//index of the outputsNum/tempNums
+		//this should be within another loop
+		
+		
+		
+		for(j = 0; j < commandAmt; j++) {
+			unsigned short a = 0;
+			
+			
+			char* astr = (char*)cmds[j][1];
+			printf("%s\t", astr);
+			
+			//Checks whether the string is a temp var or an input
+			//and depending on what it is, will get its corresponding value
+			//from the inputNums array or the tempNums array
+			if(searchStrArr(astr, (char**)inputs, inAmt) != -1) {
+				
+				a = inputNums[searchStrArr(astr, (char**)inputs, inAmt)];
+				printf("%d\t", searchStrArr(astr, (char**)inputs, inAmt));
+				
+			} else {
+				a = tempNums[searchStrArr(astr, (char**)tempVars, tVLength)];
+				printf("%d\t", searchStrArr(astr, (char**)tempVars, tVLength));
+			}
+			
+			
+			unsigned short b;
+			char* bstr = cmds[j][2];
+			printf("%s\t", bstr);
+			
+			//if the directive is NOT, second argument is the output, doesnt matter
+			if(strcmp("NOT", cmds[j][0]) == 0) {
+				b = a;
+			
+			//otherwise, do the same thing for b as we did for a
+			} else if(searchStrArr(bstr, inputs, inAmt) != -1) {
+				b = inputNums[searchStrArr(bstr, (char**)inputs, inAmt)];
+				printf("%d\t", searchStrArr(astr, (char**)inputs, inAmt));
+			} else {
+				
+				b = tempNums[searchStrArr(bstr, (char**)tempVars, tVLength)];
+				printf("%d\t", searchStrArr(astr, (char**)tempVars, tVLength));
+			}
+			
+			
+			//Finds the correct gate, and the correct location for the result, and stores
+			//the result there.
+			char* ostr = cmds[j][argArr[j]];
+			int index = searchStrArr(ostr, (char**)outputs, amt);
+			//if the index is -1, then it is an output
+			if(index != -1) {
+				outputNums[index] = gates(searchStrArr(cmds[j][0], operators, 6), a, b);
+				printf("%s: %d\t", cmds[j][argArr[j]], outputNums[index]);
+				
+			
+			//otherwise, it is a temp variable
+			} else {
+				index = searchStrArr(ostr, (char**)tempVars, tVLength);
+				tempNums[index] = gates(searchStrArr(cmds[j][0], operators, 6), a, b);
+				printf("%s: %d\t", cmds[j][argArr[j]], tempNums[index]);
+			}
+			
+			//testing
+			unsigned short c = gates(searchStrArr(cmds[j][0], operators, 6), a, b);
+			
+			printf("%s(%d %d) = %d @ %s\n", cmds[j][0],  a, b, c, ostr);
+			
+		}
+		
+		
+		//print out all of the outputs
+		for(j = 0; j < amt; j++) {
+			printf("%s ", outputNums[j]);
+		}
+		
+		
+		input++;
+		printf("\b\n-----------------------------------------------------------------------\n");
+	}
+	
 	
 	return 0;
 }

@@ -1,6 +1,5 @@
 INPUTVAR 3 IN1 IN2 IN3
 OUTPUTVAR 1 OUT1
-NOT IN2 temp1
-AND IN1 temp1 temp2
-AND IN1 IN3 temp3
-OR temp2 temp3 OUT1
+AND IN1 IN2 temp1
+AND temp1 IN3 temp2
+OR temp1 temp2 OUT1
